@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCPP Dashboard</title>
+    <link rel="stylesheet" href="/dashboard/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Charging Stations</h2>
+            <div id="stations-list"></div>
+        </div>
+        <div class="main-content">
+            <div class="header">
+                <h1>OCPP Dashboard</h1>
+                <div class="auth-section">
+                    <div id="login-form">
+                        <input type="text" id="username" placeholder="Username">
+                        <input type="password" id="password" placeholder="Password">
+                        <button onclick="login()">Login</button>
+                    </div>
+                    <div id="user-info" style="display: none;">
+                        <span id="username-display"></span>
+                        <button onclick="logout()">Logout</button>
+                    </div>
+                </div>
+            </div>
+            <div class="content">
+                <div class="station-details" id="station-details" style="display: none;">
+                    <h2>Station Details</h2>
+                    <div class="station-info">
+                        <p>ID: <span id="station-id"></span></p>
+                        <p>Status: <span id="station-status"></span></p>
+                        <p>Last Seen: <span id="station-last-seen"></span></p>
+                    </div>
+                    <div class="connectors">
+                        <h3>Connectors</h3>
+                        <div id="connectors-list"></div>
+                    </div>
+                    <div class="actions">
+                        <h3>Actions</h3>
+                        <div class="action-buttons">
+                            <button onclick="remoteStartTransaction()">Remote Start Transaction</button>
+                            <button onclick="remoteStopTransaction()">Remote Stop Transaction</button>
+                            <button onclick="resetStation('Soft')">Soft Reset</button>
+                            <button onclick="resetStation('Hard')">Hard Reset</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="transactions">
+                    <h2>Active Transactions</h2>
+                    <div id="transactions-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/dashboard/app.js"></script>
+</body>
+</html> 
