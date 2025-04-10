@@ -251,6 +251,227 @@ async function resetStation(type) {
     }
 }
 
+async function unlockConnector() {
+    if (!selectedStation) return;
+
+    const connectorId = prompt('Enter connector ID:');
+    if (!connectorId) return;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/ocpp/unlock-connector`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                chargePointId: selectedStation.chargePointId,
+                connectorId: parseInt(connectorId),
+            }),
+        });
+
+        if (response.ok) {
+            showSuccess('Unlock connector command sent');
+        } else {
+            showError('Failed to unlock connector');
+        }
+    } catch (error) {
+        showError('Error unlocking connector');
+    }
+}
+
+async function changeAvailability() {
+    if (!selectedStation) return;
+
+    const connectorId = prompt('Enter connector ID:');
+    if (!connectorId) return;
+
+    const type = prompt('Enter availability type (Operative/Inoperative):');
+    if (!type) return;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/ocpp/change-availability`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                chargePointId: selectedStation.chargePointId,
+                connectorId: parseInt(connectorId),
+                type,
+            }),
+        });
+
+        if (response.ok) {
+            showSuccess('Change availability command sent');
+        } else {
+            showError('Failed to change availability');
+        }
+    } catch (error) {
+        showError('Error changing availability');
+    }
+}
+
+async function getConfiguration() {
+    if (!selectedStation) return;
+
+    const keys = prompt('Enter configuration keys (comma-separated, leave empty for all):');
+    
+    try {
+        const response = await fetch(`${API_BASE_URL}/ocpp/get-configuration`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                chargePointId: selectedStation.chargePointId,
+                keys: keys ? keys.split(',').map(k => k.trim()) : undefined,
+            }),
+        });
+
+        if (response.ok) {
+            const config = await response.json();
+            showSuccess('Configuration retrieved: ' + JSON.stringify(config));
+        } else {
+            showError('Failed to get configuration');
+        }
+    } catch (error) {
+        showError('Error getting configuration');
+    }
+}
+
+async function changeConfiguration() {
+    if (!selectedStation) return;
+
+    const key = prompt('Enter configuration key:');
+    if (!key) return;
+
+    const value = prompt('Enter configuration value:');
+    if (!value) return;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/ocpp/change-configuration`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                chargePointId: selectedStation.chargePointId,
+                key,
+                value,
+            }),
+        });
+
+        if (response.ok) {
+            showSuccess('Configuration changed successfully');
+        } else {
+            showError('Failed to change configuration');
+        }
+    } catch (error) {
+        showError('Error changing configuration');
+    }
+}
+
+async function clearCache() {
+    if (!selectedStation) return;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/ocpp/clear-cache`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                chargePointId: selectedStation.chargePointId,
+            }),
+        });
+
+        if (response.ok) {
+            showSuccess('Cache cleared successfully');
+        } else {
+            showError('Failed to clear cache');
+        }
+    } catch (error) {
+        showError('Error clearing cache');
+    }
+}
+
+async function getDiagnostics() {
+    if (!selectedStation) return;
+
+    const location = prompt('Enter diagnostics file location:');
+    if (!location) return;
+
+    const retries = prompt('Enter number of retries (optional):');
+    const retryInterval = prompt('Enter retry interval in seconds (optional):');
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/ocpp/get-diagnostics`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                chargePointId: selectedStation.chargePointId,
+                location,
+                retries: retries ? parseInt(retries) : undefined,
+                retryInterval: retryInterval ? parseInt(retryInterval) : undefined,
+            }),
+        });
+
+        if (response.ok) {
+            showSuccess('Diagnostics request sent successfully');
+        } else {
+            showError('Failed to get diagnostics');
+        }
+    } catch (error) {
+        showError('Error getting diagnostics');
+    }
+}
+
+async function updateFirmware() {
+    if (!selectedStation) return;
+
+    const location = prompt('Enter firmware file location:');
+    if (!location) return;
+
+    const retrieveDate = prompt('Enter retrieve date (YYYY-MM-DD):');
+    if (!retrieveDate) return;
+
+    const retries = prompt('Enter number of retries (optional):');
+    const retryInterval = prompt('Enter retry interval in seconds (optional):');
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/ocpp/update-firmware`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                chargePointId: selectedStation.chargePointId,
+                location,
+                retrieveDate,
+                retries: retries ? parseInt(retries) : undefined,
+                retryInterval: retryInterval ? parseInt(retryInterval) : undefined,
+            }),
+        });
+
+        if (response.ok) {
+            showSuccess('Firmware update initiated successfully');
+        } else {
+            showError('Failed to update firmware');
+        }
+    } catch (error) {
+        showError('Error updating firmware');
+    }
+}
+
 // Utility functions
 function showError(message) {
     const errorDiv = document.createElement('div');

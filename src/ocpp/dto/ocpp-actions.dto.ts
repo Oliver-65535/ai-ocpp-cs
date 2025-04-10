@@ -15,6 +15,13 @@ export class RemoteStartTransactionDto {
   })
   @IsNumber()
   connectorId: number;
+
+  @ApiProperty({
+    description: 'ID Tag',
+    example: '1234567890'
+  })
+  @IsString()
+  idTag: string;
 }
 
 export class RemoteStopTransactionDto {

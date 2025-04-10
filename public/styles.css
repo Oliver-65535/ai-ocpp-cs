@@ -129,10 +129,28 @@ button:hover {
     color: white;
 }
 
+.status-unavailable {
+    background-color: #6c757d;
+    color: white;
+}
+
+.actions {
+    margin-bottom: 20px;
+}
+
 .action-buttons {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 10px;
-    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.action-buttons button {
+    width: 100%;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .transactions {
@@ -153,17 +171,17 @@ button:hover {
 }
 
 .error {
-    color: #dc3545;
-    margin-top: 10px;
+    background-color: #dc3545;
+    color: white;
     padding: 10px;
-    background-color: #f8d7da;
+    margin-bottom: 10px;
     border-radius: 4px;
 }
 
 .success {
-    color: #28a745;
-    margin-top: 10px;
+    background-color: #28a745;
+    color: white;
     padding: 10px;
-    background-color: #d4edda;
+    margin-bottom: 10px;
     border-radius: 4px;
 } 

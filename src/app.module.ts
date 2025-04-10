@@ -10,6 +10,7 @@ import { OcppModule } from './ocpp/ocpp.module';
 import { User } from './users/entities/user.entity';
 import { Station } from './stations/entities/station.entity';
 import { Transaction } from './transactions/entities/transaction.entity';
+import { Connector } from './stations/entities/connector.entity';
 import { StationsModule } from './stations/stations.module';
 
 @Module({
@@ -20,7 +21,7 @@ import { StationsModule } from './stations/stations.module';
     TypeOrmModule.forRoot({
       type: 'sqlite',
       database: 'ocpp.db',
-      entities: [User, Station, Transaction],
+      entities: [User, Station, Transaction, Connector],
       synchronize: true, // Set to false in production
     }),
     ServeStaticModule.forRoot({
