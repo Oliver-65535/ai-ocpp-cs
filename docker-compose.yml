@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  ocpp-cs:
+    container_name: ocpp-cs
+    # restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+      - "9600:9600"
+    command: node dist/main.js
+    

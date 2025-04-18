@@ -251,6 +251,107 @@ async function resetStation(type) {
     }
 }
 
+async function setChargingProfile() {
+    if (!selectedStation) return;
+
+    const connectorId = prompt('Enter connector ID:');
+    if (!connectorId) return;
+
+    const chargingProfileId = prompt('Enter charging profile ID:');
+    if (!chargingProfileId) return;
+
+    const stackLevel = prompt('Enter stack level (0-100):');
+    if (!stackLevel) return;
+
+    const chargingProfilePurpose = prompt('Enter charging profile purpose (ChargePointMaxProfile/TxDefaultProfile/TxProfile):');
+    if (!chargingProfilePurpose) return;
+
+    const chargingProfileKind = prompt('Enter charging profile kind (Absolute/Recurring/Relative):');
+    if (!chargingProfileKind) return;
+
+    const chargingRateUnit = prompt('Enter charging rate unit (A/W):');
+    if (!chargingRateUnit) return;
+
+    const startPeriod = prompt('Enter start period (in seconds):');
+    if (!startPeriod) return;
+
+    const limit = prompt('Enter limit value:');
+    if (!limit) return;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/ocpp/set-charging-profile`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                chargePointId: selectedStation.chargePointId,
+                connectorId: parseInt(connectorId),
+                csChargingProfiles: {
+                    chargingProfileId: parseInt(chargingProfileId),
+                    stackLevel: parseInt(stackLevel),
+                    chargingProfilePurpose,
+                    chargingProfileKind,
+                    chargingSchedule: {
+                        chargingRateUnit,
+                        chargingSchedulePeriod: [{
+                            startPeriod: parseInt(startPeriod),
+                            limit: parseFloat(limit)
+                        }]
+                    }
+                }
+            }),
+        });
+
+        if (response.ok) {
+            showSuccess('Charging profile set successfully');
+        } else {
+            showError('Failed to set charging profile');
+        }
+    } catch (error) {
+        showError('Error setting charging profile');
+    }
+}
+
+async function getCompositeSchedule() {
+    if (!selectedStation) return;
+
+    const connectorId = prompt('Enter connector ID:');
+    if (!connectorId) return;
+
+    const duration = prompt('Enter duration in seconds:');
+    if (!duration) return;
+
+    const chargingRateUnit = prompt('Enter charging rate unit (A/W):');
+    if (!chargingRateUnit) return;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/ocpp/get-composite-schedule`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                chargePointId: selectedStation.chargePointId,
+                connectorId: parseInt(connectorId),
+                duration: parseInt(duration),
+                chargingRateUnit
+            }),
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            showSuccess(`Composite schedule: ${JSON.stringify(data)}`);
+        } else {
+            showError('Failed to get composite schedule');
+        }
+    } catch (error) {
+        showError('Error getting composite schedule');
+    }
+}
+
 // Utility functions
 function showError(message) {
     const errorDiv = document.createElement('div');
